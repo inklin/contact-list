@@ -77,7 +77,6 @@ Question: Before implementing, think about whether or not you need to store an I
 When the user enters the list command, the app should display a list of all contacts within the app, printed one on each line. Example output:
 
 12: Khurram Virani (kvirani@lighthouselabs.ca)
-14: Don Burks (don@lighthouselabs.ca)
 ---
 2 records total
 The number (#) should start with 1 and represents an index or unique ID for each contact. Once the contacts are printed out to the screen, the app should exit.
