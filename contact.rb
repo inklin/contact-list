@@ -3,22 +3,24 @@ class Contact
   @@next_id = 1
   attr_accessor :name, :email, :id
 
-  def initialize(name, email, id)
+  def initialize(name, email, id, numbers)
     @name = name
     @email = email
     @id = id
+    @numbers = numbers
   end
  
   def to_s
     # TODO: return string representation of Contact
-    "#{@id},#{@name},#{@email}\n"
+    numbers_string = @numbers.to_a.flatten.join(',')
+    "#{@id},#{@name},#{@email},\"#{numbers_string}\"\n"
   end
  
   ## Class Methods
   class << self
 
-    def create(name, email)
-      contact = Contact.new(name, email, @@next_id)
+    def create(name, email, numbers)
+      contact = Contact.new(name, email, @@next_id, numbers)
       Contact.add(contact)
       contact
     end

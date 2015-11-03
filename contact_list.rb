@@ -21,7 +21,9 @@ end
 def create_new_contact
   email = get_new_email
   name = prompt_name
-  contact = Contact.create(name, email)
+  numbers = get_numbers
+  puts "Numbers are #{numbers}"
+  contact = Contact.create(name, email, numbers)
   ContactDatabase.add(contact.to_s)
 end
 
@@ -49,6 +51,32 @@ end
 # I/O: No parameters, returns string
 def prompt_email
   print "Enter new contact's e-mail: "
+  $stdin.gets.chomp
+end
+
+def get_numbers
+  numbers = {}
+  loop do
+    label = prompt_label
+    number = prompt_number
+    numbers[label] = number
+    break if done_numbers?
+  end
+  numbers
+end
+
+def done_numbers?
+  puts "Are all the numbers entered? y/n"
+  $stdin.gets.chomp == "y"
+end
+
+def prompt_label
+  print "Enter a label for the phone number:"
+  $stdin.gets.chomp
+end
+
+def prompt_number
+  print "Enter the phone number:"
   $stdin.gets.chomp
 end
 

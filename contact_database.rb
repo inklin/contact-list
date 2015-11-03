@@ -24,7 +24,17 @@ class ContactDatabase
         id = contact[0]
         name = contact[1]
         email = contact[2]
-        new_contact = Contact.new(name, email, id)
+        numbers_array = contact[3].scan(/[A-Za-z]+,[\d]+-[\d]+/)
+        number_hash = Hash.new()
+
+        numbers_array.each do |info|
+          info_array = info.split(',')
+          label = info_array[0]
+          number = info_array[1]
+          number_hash[label] = number
+        end
+
+        new_contact = Contact.new(name, email, id, number_hash)
         Contact.add(new_contact)
       end
     end
