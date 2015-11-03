@@ -19,12 +19,26 @@ end
 # Calls prompt_name and prompt_email,
 # calls create method on Contact class with parameters name, email
 def create_new_contact
+  email = get_new_email
   name = prompt_name
-  email = prompt_email
   contact = Contact.create(name, email)
   ContactDatabase.add(contact.to_s)
 end
 
+def get_new_email
+  email = ""
+  loop do
+    email = prompt_email
+    break if email_free?(email)
+    puts "A contact with that e-mail already exists."
+    puts "Please enter another e-mail."
+  end
+  email
+end
+
+def email_free?(email)
+  Contact.unused?(email)
+end
 
 # I/O: No parameters, returns string
 def prompt_name
