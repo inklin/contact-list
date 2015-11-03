@@ -10,6 +10,9 @@ def start
   when "help" then menu
   when "new"  then add_new_contact
   when "list" then list_contacts
+  when "show" then 
+    id = @parameter.to_i
+    puts Contact.show(id)
   end
 end
 
@@ -37,7 +40,11 @@ def prompt_email
 end
 
 def list_contacts
-  read
+  Contact.all.each do |contact|
+    puts "#{contact.id}: #{contact.name} (#{contact.email})"
+  end
+  puts "---"
+  puts "#{Contact.list_count} records total"
 end
 
 # I/O: No parametrs, no return value
@@ -50,4 +57,5 @@ def menu
   puts "\tfind - Find a contact"
 end
 
+load_csv
 start

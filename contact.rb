@@ -11,17 +11,15 @@ class Contact
  
   def to_s
     # TODO: return string representation of Contact
-    "#{@id}, #{@name}, #{@email}\n"
+    "#{@id},#{@name},#{@email}\n"
   end
  
   ## Class Methods
   class << self
-    attr_reader :list
 
     def create(name, email)
       contact = Contact.new(name, email, @@next_id)
-      @@list << contact
-      @@next_id += 1
+      Contact.add(contact)
       contact
     end
  
@@ -36,10 +34,16 @@ class Contact
     
     def show(id)
       # TODO: Show a contact, based on ID
+      @@list.select { |contact| contact.id == id}
     end
 
     def list_count
       @@list.count
+    end
+
+    def add(contact)
+      @@list << contact
+      @@next_id += 1
     end
     
   end
