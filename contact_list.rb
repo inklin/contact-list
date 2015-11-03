@@ -1,9 +1,13 @@
 require_relative 'contact'
 require_relative 'contact_database'
+require_relative 'exceptions'
 
 # TODO: Implement command line interaction
 # This should be the only file where you use puts and gets
 @command, @parameter = ARGV
+
+class EmailInSystem < StandardError
+end
 
 def start
   case @command
@@ -29,17 +33,18 @@ end
 
 def get_new_email
   email = ""
-  loop do
+  begin
     email = prompt_email
-    break if email_free?(email)
-    puts "A contact with that e-mail already exists."
-    puts "Please enter another e-mail."
+    check_email(email)
+  rescue EmailError
+    puts "That email already exists in the system."
+    email = prompt_email
   end
   email
 end
 
-def email_free?(email)
-  Contact.unused?(email)
+def check_email(email)
+  raise EmailError if Contact.used?(email)
 end
 
 # I/O: No parameters, returns string

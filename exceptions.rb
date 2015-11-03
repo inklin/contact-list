@@ -1,0 +1,2 @@
+class EmailError < StandardError
+end

@@ -52,8 +52,8 @@ class Contact
 
     # checks if email is already in the list
     # I/O: takes a string as a parameter and returns true/false
-    def unused?(email)
-      @@list.none? { |contact| contact.email.downcase == email}
+    def used?(email)
+      @@list.any? { |contact| contact.email.downcase == email}
     end
     
   end
