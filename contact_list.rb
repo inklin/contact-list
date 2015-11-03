@@ -4,33 +4,44 @@ require_relative 'contact_database'
 # TODO: Implement command line interaction
 # This should be the only file where you use puts and gets
 @command, @parameter = ARGV
-contacts = []
 
 def start
   case @command
   when "help" then menu
-  when "new"  then create_new_contact
+  when "new"  then add_new_contact
+  when "list" then list_contacts
   end
 end
 
-def create_new_contact
+# I/O: Takes no parameters, Returns new contact id (int)
+# Calls prompt_name and prompt_email,
+# calls create method on Contact class with parameters name, email
+def add_new_contact
   name = prompt_name
   email = prompt_email
-  new_contact = Contact.create(name, email)
-  contacts << new_contact
-  add_contact_to_csv(new_contact.to_s)
+  contact = Contact.create(name, email)
+  add_contact_to_csv(contact.to_s)
+  contact.id
 end
 
+# I/O: No parameters, returns string
 def prompt_name
   print "Enter new contact's name: "
   $stdin.gets.chomp
 end
 
+# I/O: No parameters, returns string
 def prompt_email
   print "Enter new contact's e-mail: "
   $stdin.gets.chomp
 end
 
+def list_contacts
+  read
+end
+
+# I/O: No parametrs, no return value
+# Method prints a menu to the console
 def menu
   puts "Here is a list of available commands:"
   puts "\tnew - Create a new contact"

@@ -1,25 +1,28 @@
 class Contact
-  attr_accessor :name, :email
-  @@contacts = []
+  @@list = []
+  @@next_id = 1
+  attr_accessor :name, :email, :id
 
-  def initialize(name, email)
-    # TODO: assign local variables to instance variables
+  def initialize(name, email, id)
     @name = name
     @email = email
-    @@contacts << self
+    @id = id
   end
  
   def to_s
     # TODO: return string representation of Contact
-    "#{contact.size}, #{@name}, #{@email}\n"
+    "#{@id}, #{@name}, #{@email}\n"
   end
  
   ## Class Methods
   class << self
+    attr_reader :list
 
     def create(name, email)
-      new_contact = Contact.new(name, email)
-      contacts << new_contact
+      contact = Contact.new(name, email, @@next_id)
+      @@list << contact
+      @@next_id += 1
+      contact
     end
  
     def find(term)
@@ -28,14 +31,15 @@ class Contact
  
     def all
       # TODO: Return the list of contacts, as is
+      @@list
     end
     
     def show(id)
       # TODO: Show a contact, based on ID
     end
 
-    def contact_count
-      @@contacts.inspect
+    def list_count
+      @@list.count
     end
     
   end
