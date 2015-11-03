@@ -25,6 +25,10 @@ class Contact
  
     def find(term)
       # TODO: Will find and return contacts that contain the term in the first name, last name or email
+      matching_contacts = @@list.select do |contact| 
+        contact.name.downcase.include?(term) || contact.email.downcase.include?(term)
+      end
+      matching_contacts
     end
  
     def all
@@ -34,11 +38,9 @@ class Contact
     
     def show(id)
       # TODO: Show a contact, based on ID
-      @@list.select { |contact| contact.id == id}
-    end
-
-    def list_count
-      @@list.count
+      @@list.each do |contact|
+       return contact if contact.id == id
+      end
     end
 
     def add(contact)

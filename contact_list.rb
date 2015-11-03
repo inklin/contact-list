@@ -8,24 +8,23 @@ require_relative 'contact_database'
 def start
   case @command
   when "help" then menu
-  when "new"  then add_new_contact
-  when "list" then list_contacts
-  when "show" then 
-    id = @parameter.to_i
-    puts Contact.show(id)
+  when "new"  then create_new_contact
+  when "list" then list_contacts(Contact.all)
+  when "show" then show_contact(@parameter)
+  when "find" then find_contacts(@parameter)
   end
 end
 
 # I/O: Takes no parameters, Returns new contact id (int)
 # Calls prompt_name and prompt_email,
 # calls create method on Contact class with parameters name, email
-def add_new_contact
+def create_new_contact
   name = prompt_name
   email = prompt_email
   contact = Contact.create(name, email)
-  add_contact_to_csv(contact.to_s)
-  contact.id
+  ContactDatabase.add(contact.to_s)
 end
+
 
 # I/O: No parameters, returns string
 def prompt_name
@@ -39,12 +38,24 @@ def prompt_email
   $stdin.gets.chomp
 end
 
-def list_contacts
-  Contact.all.each do |contact|
+def list_contacts(contacts)
+  contacts.each do |contact|
     puts "#{contact.id}: #{contact.name} (#{contact.email})"
   end
   puts "---"
-  puts "#{Contact.list_count} records total"
+  puts "#{contacts.size} records total"
+end
+
+def show_contact(id)
+  contact = Contact.show(id)
+  puts "Name: #{contact.name}"
+  puts "Email: #{contact.email}"
+end
+
+def find_contacts(term)
+  search_term = term.downcase
+  matches = Contact.find(search_term)
+  list_contacts(matches)
 end
 
 # I/O: No parametrs, no return value
@@ -57,5 +68,5 @@ def menu
   puts "\tfind - Find a contact"
 end
 
-load_csv
+ContactDatabase.load
 start
