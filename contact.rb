@@ -2,6 +2,7 @@ class Contact
   @@list = []
   @@next_id = 1
   attr_accessor :name, :email, :id
+  attr_reader :numbers
 
   def initialize(name, email, id, numbers)
     @name = name

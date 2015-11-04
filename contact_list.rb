@@ -26,7 +26,6 @@ def create_new_contact
   email = get_new_email
   name = prompt_name
   numbers = get_numbers
-  puts "Numbers are #{numbers}"
   contact = Contact.create(name, email, numbers)
   ContactDatabase.add(contact.to_s)
 end
@@ -87,7 +86,7 @@ end
 
 def list_contacts(contacts)
   contacts.each do |contact|
-    puts "#{contact.id}: #{contact.name} (#{contact.email})"
+    puts "#{contact.id}: #{contact.name} (#{contact.email}, #{contact.numbers})"
   end
   puts "---"
   puts "#{contacts.size} records total"
