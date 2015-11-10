@@ -1,5 +1,6 @@
 class Contact
-  attr_reader :numbers, :name, :email, :id
+  attr_accessor:firstname, :lastname, :email
+  attr_reader :id
 
   def initialize(firstname, lastname, email, id=nil)
     @firstname = firstname
@@ -12,24 +13,19 @@ class Contact
     "#{@id},#{@firstname} #{@lastname},#{@email}"
   end
 
-  # Contact #save
-  # Insert or Update a row in the DB
-  # INSERT INTO contacts (firstname, lastname, email) VALUES ($1, $2, $3) [firstname, lastname, email]
-  # UPDATE contacts SET firstname = $1, lastname = $2, email = $3 WHERE id = $3; [firstname, lastname, email, id] 
-
   # Contact #destroy
-  # Delete contact from DB
-  # DELETE FROM contacts WHERE id = $1, [id]
-  # def save
-  #   if id
-  #     # in the database already
-  #     # update the contact
-  #   else
-  #     # not in the database yet
-  #     # add to database!
-  #     # also update the contact instance's id attribute
-  #   end
-  # end
+  def destroy
+    Contact.connection.exec_params('DELETE FROM contacts WHERE id = $1, [id];', [id])
+  end
+
+  def save
+    if id
+      Contact.connection.exec_params('UPDATE contacts SET firstname = $1, lastname = $2, email = $3 WHERE id = $3;', [firstname, lastname, email, id])
+    else
+      result = Contact.connection.exec_params('INSERT INTO contacts (firstname, lastname, email) VALUES ($1, $2, $3) RETURNING id;', [firstname, lastname, email])
+      @id = result[0]['id']
+    end
+  end
 
   # Class methods
   # Connection Class method

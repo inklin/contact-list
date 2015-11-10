@@ -18,5 +18,5 @@ require 'pg'
 # puts contact.inspect
 
 # Find contacts with last name Smith
-contacts = Contact.find_all_by_lastname('Smith')
-puts contacts.inspect
+# contacts = Contact.find_all_by_lastname('Smith')
+# puts contacts.inspect
