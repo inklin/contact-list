@@ -31,18 +31,19 @@ class ContactList
     firstname = prompt_name
     lastname = prompt_surname    
     contact = Contact.create(firstname: firstname, lastname: lastname, email: email)
+    check_save(contact)
     get_numbers(contact)
-    save_contact(contact)
   end
 
-  def save_contact(contact)
-    if contact.save
+  def check_save(contact)
+    if contact.valid?
       puts "Contact successfully added!"
     else
-      puts "Contact not saved. :( "
-      contact.errors.full_message.each do |attribute, message|
+      puts "Contact not added. "
+      contact.errors.each do |attribute, message|
         puts "#{attribute}: #{message}"
       end
+      create_new_contact
     end
   end
 
@@ -60,13 +61,8 @@ class ContactList
   end
 
   def prompt_name
-    name = ""
-    loop do
-      print "Enter new contact's first name: "
-      name = $stdin.gets.chomp
-      break if name.length > 0
-    end
-    name
+    print "Enter new contact's first name: "
+    $stdin.gets.chomp
   end
 
   def prompt_surname
@@ -87,7 +83,7 @@ class ContactList
 
   def done_numbers?
     puts "Do you have another number to enter? y/n"
-    $stdin.gets.chomp == "n" || $stdin.gets.chomp == "no"
+    $stdin.gets.chomp == "n"
   end
 
   def list_contacts(contacts)
