@@ -27,17 +27,30 @@ class ContactList
   end
 
   def create_new_contact
-    email = get_new_email
+    email = get_email
     firstname = prompt_name
     lastname = prompt_surname    
-    contact = Contact.create!(firstname: firstname, lastname: lastname, email: email)
+    contact = Contact.create(firstname: firstname, lastname: lastname, email: email)
     get_numbers(contact)
+    save_contact(contact)
   end
 
-  def get_new_email
+  def save_contact(contact)
+    if contact.save
+      puts "Contact successfully added!"
+    else
+      puts "Contact not saved. :( "
+      contact.errors.full_message.each do |attribute, message|
+        puts "#{attribute}: #{message}"
+      end
+    end
+  end
+
+  def get_email
     email = ""
     begin
-      email = prompt_email
+      print "Enter new contact's e-mail: "
+      email = $stdin.gets.chomp
       raise EmailError if Contact.exists?(email: email)
       email
     rescue EmailError
@@ -47,8 +60,13 @@ class ContactList
   end
 
   def prompt_name
-    print "Enter new contact's first name: "
-    $stdin.gets.chomp
+    name = ""
+    loop do
+      print "Enter new contact's first name: "
+      name = $stdin.gets.chomp
+      break if name.length > 0
+    end
+    name
   end
 
   def prompt_surname
@@ -56,15 +74,12 @@ class ContactList
     $stdin.gets.chomp
   end
 
-  def prompt_email
-    print "Enter new contact's e-mail: "
-    $stdin.gets.chomp
-  end
-
   def get_numbers(contact)
     loop do
-      label = prompt_label
-      number = prompt_number
+      print "Enter a label for your phone number: "
+      label = $stdin.gets.chomp
+      print "Enter the phone number: "
+      number = $stdin.gets.chomp
       contact.phones.create(digits: number, context: label)
       break if done_numbers?
     end
@@ -72,17 +87,7 @@ class ContactList
 
   def done_numbers?
     puts "Do you have another number to enter? y/n"
-    $stdin.gets.chomp == "n"
-  end
-
-  def prompt_label
-    print "Enter a label for the phone number: "
-    $stdin.gets.chomp
-  end
-
-  def prompt_number
-    print "Enter the phone number: "
-    $stdin.gets.chomp
+    $stdin.gets.chomp == "n" || $stdin.gets.chomp == "no"
   end
 
   def list_contacts(contacts)
@@ -94,13 +99,13 @@ class ContactList
   end
 
   def print_phones(contact)
-    contact.phones.map { |phone| phone.to_s }.join(', ')
+    contact.phones.map { |phone| phone.to_s }.join(', ') unless contact.phones.empty?
   end
 
   def show_contact(id)
     begin
       contact = Contact.find(id.to_i)
-      puts contact.to_i
+      puts contact.to_s
     rescue ActiveRecord::RecordNotFound
       puts "No contact with id #{id} was found."
     end
